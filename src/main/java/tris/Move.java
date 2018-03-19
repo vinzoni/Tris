@@ -22,12 +22,4 @@ public class Move {
 		return move;
 	}
 	
-//	public int row() {
-//		return (int) ('3' - move.charAt(1));
-//	}
-//	
-//	public int col() {
-//		return (int) (move.charAt(0) - 'a');
-//	}
-	
 }

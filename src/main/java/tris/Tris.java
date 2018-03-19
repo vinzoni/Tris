@@ -10,8 +10,8 @@ public class Tris {
 		try {
 			Properties properties = new Properties();
 			properties.load(new FileInputStream("src/main/resources/tris.properties"));
-
-			Match match = new Match(properties);
+			
+			Match match = TrisFactory.getMatchInstance(properties);
 			match.play();
 
 		} catch (Exception e) {

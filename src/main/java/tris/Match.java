@@ -8,11 +8,17 @@ public class Match {
 
 	private Player player1;
 	private Player player2;
-	private int gamesToPlay;
+	private int gamesToPlay = 0;
 	private int playedGames = 0;
 	private int winPlayer1Games = 0;
 	private int winPlayer2Games = 0;
 	private int drawnGames = 0;
+	private MatchController controller = null;
+	private BoardController bcontroller = null;
+	
+	public void subscribe(MatchController controller) {
+		this.controller = controller;
+	}
 	
 	public int getWinPlayer2Games() {
 		return winPlayer2Games;
@@ -36,12 +42,6 @@ public class Match {
 		return playedGames;
 	}
 	
-	public Match(Board board, Player p1, Player p2, int games) {
-		this.player1 = p1;
-		this.player2 = p2;
-		this.gamesToPlay = games;
-	}
-
 	public Match(Properties configuration) throws FileNotFoundException, IOException {
 		player1 = PlayerFactory.getInstance(configuration);
 		player2 = PlayerFactory.getInstance(configuration);
@@ -49,22 +49,18 @@ public class Match {
 	}
 	
 	public void play() throws InterruptedException {
-		if (gamesToPlay == 1) {
-			playSingleGame();
-			return;
-		}
-		
 		while (playedGames < gamesToPlay) {
-			playSingleGame();
+			Board board = playSingleGame();
 			playedGames++;
-			TrisUI.displayMatchResult(this);
+			if (controller != null) controller.notifyGameEnd(player1, player2, board, playedGames, gamesToPlay, winPlayer1Games, winPlayer2Games, drawnGames);
 		}
 	}
 	
-	private void playSingleGame() throws InterruptedException {
-		Board board = new Board();
+	private Board playSingleGame() throws InterruptedException {
+		Board board = TrisFactory.getBoardInstance();
 		
-		TrisUI.displayBoard(board);
+		if (bcontroller != null) bcontroller.notifyGameStart();
+		
 		Player playerToMove = player1;
 
 		while (true) {
@@ -76,8 +72,8 @@ public class Match {
 			playerToMove = (playerToMove == player1 ? player2 : player1);
 		}
 
-		TrisUI.displayEndOfGameMessage(board);
 		updateScore(board);
+		return board;
 	}
 	
 	private void updateScore(Board board) {
@@ -90,11 +86,10 @@ public class Match {
 	}
 	
 	private void gameTurn(Player player, Board board) throws InterruptedException {
-		TrisUI.displayPlayerToMoveMessage(player);
+		if (controller != null) controller.notifyPlayerOnTheMove(player);
 		Move m = player.play(board);
-		TrisUI.displayMovePlayedMessage(player, m);
+		if (controller != null) controller.notifyMovePlayed(player, m);
 		board.update(m);
-		TrisUI.displayBoard(board);
 	}
 
 }

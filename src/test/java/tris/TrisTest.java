@@ -13,8 +13,9 @@ public class TrisTest {
 	final Player player2 = new TestingPlayer("Alice", '0');
 	
 	@Test
-	public void drawEmptyBoard() {
-		board.display();
+	public void drawEmptyBoard() throws InterruptedException {
+		BoardView view = new BoardView();
+		view.display(board);
 	}
 
 	@Test
@@ -23,20 +24,20 @@ public class TrisTest {
 	}
 
 	@Test
-	public void updateBoard() {
+	public void updateBoard() throws InterruptedException {
 		Move m = new Move(player1, "a1");
 		board.update(m);
 	}
 
 	@Test
-	public void noWinner() {
+	public void noWinner() throws InterruptedException {
 		Move m = new Move(player1, "a1");
 		board.update(m);
 		assertNull(board.getWinner());
 	}
 
 	@Test
-	public void playerWonOnFirstRow() {
+	public void playerWonOnFirstRow() throws InterruptedException {
 		board.update(new Move(player1, "a3"));
 		board.update(new Move(player1, "b3"));
 		board.update(new Move(player1, "c3"));
@@ -45,7 +46,7 @@ public class TrisTest {
 	}
 
 	@Test
-	public void playerWonOnSecondRow() {
+	public void playerWonOnSecondRow() throws InterruptedException {
 		board.update(new Move(player1, "a2"));
 		board.update(new Move(player1, "b2"));
 		board.update(new Move(player1, "c2"));
@@ -54,7 +55,7 @@ public class TrisTest {
 	}
 
 	@Test
-	public void playerWonOnThirdRow() {
+	public void playerWonOnThirdRow() throws InterruptedException {
 		board.update(new Move(player1, "a1"));
 		board.update(new Move(player1, "b1"));
 		board.update(new Move(player1, "c1"));
@@ -63,7 +64,7 @@ public class TrisTest {
 	}
 	
 	@Test
-	public void playerWonOnFirstCol() {
+	public void playerWonOnFirstCol() throws InterruptedException {
 		board.update(new Move(player1, "a1"));
 		board.update(new Move(player1, "a2"));
 		board.update(new Move(player1, "a3"));
@@ -72,7 +73,7 @@ public class TrisTest {
 	}
 
 	@Test
-	public void playerWonOnFirstDiagonal() {
+	public void playerWonOnFirstDiagonal() throws InterruptedException {
 		board.update(new Move(player1, "a3"));
 		board.update(new Move(player1, "b2"));
 		board.update(new Move(player1, "c1"));
@@ -81,7 +82,7 @@ public class TrisTest {
 	}
 
 	@Test
-	public void playerWonOnSecondDiagonal() {
+	public void playerWonOnSecondDiagonal() throws InterruptedException {
 		board.update(new Move(player1, "a1"));
 		board.update(new Move(player1, "b2"));
 		board.update(new Move(player1, "c3"));
@@ -90,14 +91,14 @@ public class TrisTest {
 	}
 
 	@Test
-	public void noGameOver() {
+	public void noGameOver() throws InterruptedException {
 		Move m = new Move(player1, "a1");
 		board.update(m);
 		assertTrue(!board.isGameOver());
 	}
 
 	@Test
-	public void gameDrawn() {
+	public void gameDrawn() throws InterruptedException {
 		board.update(new Move(player1, "a1"));
 		board.update(new Move(player2, "b2"));
 		board.update(new Move(player1, "a3"));

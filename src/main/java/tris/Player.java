@@ -2,6 +2,7 @@ package tris;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public abstract class Player 
 {
@@ -34,7 +35,12 @@ class HumanPlayer extends Player {
 	}
 	
 	public Move play(Board board) {
-		return TrisUI.readMove(this);
+//		return TrisUI.readMove(this);
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Inserisci la tua mossa (es. a2): ");
+		String move = sc.nextLine();
+		return new Move(this, move);
+		
 	}
 }
 

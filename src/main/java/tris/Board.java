@@ -5,9 +5,11 @@ import java.util.List;
 
 public class Board {
 	static private final int LEN = 3;
-	char [][] board = new char[LEN][LEN];
-	int moveCounter = 0;
-	Move lastMovePlayed = null;
+	private char [][] board = new char[LEN][LEN];
+	private int moveCounter = 0;
+	private Move lastMovePlayed = null;
+	
+	private BoardController controller = null;
 	
 	Board() {
 		for (int i=0; i<LEN; ++i) {
@@ -17,20 +19,15 @@ public class Board {
 		}
 	}
 	
-	public void display() {
-		System.out.println();
-		System.out.println("                   ");
-		System.out.println(" 3   " + board[0][0] + " | " + board[0][1] + " | " + board[0][2] + "  ");
-		System.out.println("    --- --- --- ");
-		System.out.println(" 2   " + board[1][0] + " | " + board[1][1] + " | " + board[1][2] + "  ");
-		System.out.println("    --- --- --- ");
-		System.out.println(" 1   " + board[2][0] + " | " + board[2][1] + " | " + board[2][2] + "  ");
-		System.out.println("                   ");
-		System.out.println("     a   b   c  ");
-		System.out.println();
-	}
+	public void subscribe(BoardController controller) {
+		this.controller = controller;
+	}	
 
-	public void update(Move m) {
+	public char get(int col, int row) {
+		return board[col][row];
+	}
+	
+	public void update(Move m) throws InterruptedException {
 		moveCounter++;
 		lastMovePlayed = m;
 		
@@ -38,6 +35,9 @@ public class Board {
 		int col = (int) (m.toString().charAt(0) - 'a');
 				
 		board[row][col] = m.symbol();
+		
+		if (controller != null) controller.notifyBoardUpdate();
+		
 	}
 
 	public List<Move> getAvailableMoves(Player p) {
